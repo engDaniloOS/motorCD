@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  consulta_centro_distribuicao_mock:
+    build:
+      context: ./CentroDistribuicao/ConsultaCentroDistribuicaoMock
+      dockerfile: Dockerfile
+    environment:
+      - DELAY=30
+      - ERROR=5
+      - TODOS_CDS=false
+    ports:
+      - "9191:8080"
+
+  motor_centro_distribuicao:
+    build:
+      context: ./CentroDistribuicao/MotorCentroDistribuicao
+      dockerfile: Dockerfile
+    environment:
+      - MAX_REQ_PARALELAS=8
+      - ASPNETCORE_ENVIRONMENT=docker
+    ports:
+      - "9292:8080"
+    depends_on:
+      - consulta_centro_distribuicao_mock
